@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{%load static %}
+{% block dashboard %}active{% endblock dashboard  %}
+
+{% block title%}Dashboard{% endblock title %}
+
+{% block header%}Welcome {{name}}{% endblock header %}
+
+{% block body %}
+{%if is_student%}
+<div class="row pb-4">
+    <div class="col">
+      <div class="card bg-theme text-white">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 float-left" style="border-right:1px solid white;">
+              <img src="{{ profile.profile_pic.url }}" width="300" height="300" class="img-thumbnail rounded-circle" alt="{{ profile.profile_pic.url }}">
+            </div>
+            <div class="col-md-6 float-left pt-2" >
+              <h5>&nbspName:&nbsp&nbsp{{profile.name}}</h5>
+              <h5>&nbspRoll:&nbsp&nbsp{{profile.roll_no}}</h5>
+              <h5>&nbspSemester:&nbsp&nbsp{{profile.semester}}</h5>
+              <h5>&nbspStream:&nbsp&nbsp{{profile.stream}}</h5>
+              <h5>&nbspAttendance:&nbsp&nbsp{{attendance}}%</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+  
+<div class="row">
+    <div class="col-md-6 stretch-card grid-margin">
+      <div class="card btn-light card-img-holder text-white">
+        <button class="btn btn-send" onclick="location.href='{% url 'encyclopedia' %}';">
+        <div class="card-body">
+          <h4 class="font-weight-normal mb-3">College Encyclopedia</h4>
+        </div>
+        </button>
+      </div>
+    </div>
+    
+    <div class="col-md-6 stretch-card grid-margin">
+      <div class="card btn-light card-img-holder text-white">
+        <button class="btn btn-send" onclick="location.href='{% url 'attendancedetails' %}';">
+        <div class="card-body">
+          <h4 class="font-weight-normal mb-3">Attendance Details </h4>
+        </div>
+      </button>
+      </div>    
+    </div>
+  </div>
+{% endif %}
+
+{%if is_prof%}
+<div class="row pb-4">
+    <div class="col">
+      <div class="card bg-theme text-white">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 float-left" style="border-right:1px solid white;">
+              <img src="{{ profile.profile_pic.url }}" width="300" height="300" class="img-thumbnail rounded-circle" alt="{{ profile.profile_pic.url }}">
+            </div>
+            <div class="col-md-6 float-left pt-2" >
+              <h5>&nbspName:&nbsp&nbsp{{profile.name}}</h5>
+              <h5>&nbspID:&nbsp&nbsp{{profile.professor_id}}</h5>
+              <h5>&nbspDesignation:&nbsp&nbsp{{profile.designation}}</h5>
+              <h5>&nbspDepartment:&nbsp&nbsp{{profile.department}}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+  
+<div class="row">
+    <div class="col-md-6 stretch-card grid-margin">
+      <div class="card btn-light card-img-holder text-white">
+      <button class="btn btn-send" onclick="location.href='{% url 'encyclopedia' %}';">
+        <div class="card-body">
+          <h4 class="font-weight-normal mb-3">College Encyclopedia</h4>
+        </div>
+      </button>
+      </div>
+    </div>
+    <div class="col-md-6 stretch-card grid-margin">
+      <div class="card btn-light card-img-holder text-white">
+        <button class="btn btn-send" onclick="location.href='{% url 'attendancedetails' %}';">
+          <div class="card-body">
+            <h4 class="font-weight-normal mb-3">Attendance Details </h4>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{%if isadmin%}
+<div class="row">
+  <div class="col-md-4 stretch-card grid-margin">
+    <a href="admin"><div class="card btn-light card-img-holder text-white">
+      <button class="btn btn-send">
+      <div class="card-body">
+        <center><h4 class="font-weight-normal mb-3">Go to Database</h4></center>
+      </div>
+      </button>
+    </div></a>
+  </div>
+</div>
+{%endif%}
+{% endblock body %}
