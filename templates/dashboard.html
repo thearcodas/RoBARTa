@@ -4,108 +4,103 @@
 
 {% block title%}Dashboard{% endblock title %}
 
-{% block header%}Welcome {{name}}{% endblock header %}
+{% block header%}Welcome {{name}}!{% endblock header %}
 
 {% block body %}
-{%if is_student%}
-<div class="row pb-4">
-    <div class="col">
-      <div class="card bg-theme text-white">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-4 float-left" style="border-right:1px solid white;">
-              <img src="{{ profile.profile_pic.url }}" width="300" height="300" class="img-thumbnail rounded-circle" alt="{{ profile.profile_pic.url }}">
-            </div>
-            <div class="col-md-6 float-left pt-2" >
-              <h5>&nbspName:&nbsp&nbsp{{profile.name}}</h5>
-              <h5>&nbspRoll:&nbsp&nbsp{{profile.roll_no}}</h5>
-              <h5>&nbspSemester:&nbsp&nbsp{{profile.semester}}</h5>
-              <h5>&nbspStream:&nbsp&nbsp{{profile.stream}}</h5>
-              <h5>&nbspAttendance:&nbsp&nbsp{{attendance}}%</h5>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
-  
-<div class="row">
-    <div class="col-md-6 stretch-card grid-margin">
-      <div class="card btn-light card-img-holder text-white">
-        <button class="btn btn-send" onclick="location.href='{% url 'encyclopedia' %}';">
-        <div class="card-body">
-          <h4 class="font-weight-normal mb-3">College Encyclopedia</h4>
-        </div>
-        </button>
-      </div>
-    </div>
-    
-    <div class="col-md-6 stretch-card grid-margin">
-      <div class="card btn-light card-img-holder text-white">
-        <button class="btn btn-send" onclick="location.href='{% url 'attendancedetails' %}';">
-        <div class="card-body">
-          <h4 class="font-weight-normal mb-3">Attendance Details </h4>
-        </div>
-      </button>
-      </div>    
-    </div>
+<div class="chat-window">
+  <div class="toggle-container">
+      <h4 class="mb-0">RoBARTa</h4>
+      <button class="btn btn-outline-light" onclick="toggleMode()" id="modeToggle">Light Mode</button>
   </div>
-{% endif %}
 
-{%if is_prof%}
-<div class="row pb-4">
-    <div class="col">
-      <div class="card bg-theme text-white">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-4 float-left" style="border-right:1px solid white;">
-              <img src="{{ profile.profile_pic.url }}" width="300" height="300" class="img-thumbnail rounded-circle" alt="{{ profile.profile_pic.url }}">
-            </div>
-            <div class="col-md-6 float-left pt-2" >
-              <h5>&nbspName:&nbsp&nbsp{{profile.name}}</h5>
-              <h5>&nbspID:&nbsp&nbsp{{profile.professor_id}}</h5>
-              <h5>&nbspDesignation:&nbsp&nbsp{{profile.designation}}</h5>
-              <h5>&nbspDepartment:&nbsp&nbsp{{profile.department}}</h5>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
-  
-<div class="row">
-    <div class="col-md-6 stretch-card grid-margin">
-      <div class="card btn-light card-img-holder text-white">
-      <button class="btn btn-send" onclick="location.href='{% url 'encyclopedia' %}';">
-        <div class="card-body">
-          <h4 class="font-weight-normal mb-3">College Encyclopedia</h4>
-        </div>
-      </button>
-      </div>
-    </div>
-    <div class="col-md-6 stretch-card grid-margin">
-      <div class="card btn-light card-img-holder text-white">
-        <button class="btn btn-send" onclick="location.href='{% url 'attendancedetails' %}';">
-          <div class="card-body">
-            <h4 class="font-weight-normal mb-3">Attendance Details </h4>
-          </div>
-        </button>
-      </div>
-    </div>
-  </div>
-{% endif %}
+  <div class="chat-log" id="chat-log"></div>
 
-{%if isadmin%}
-<div class="row">
-  <div class="col-md-4 stretch-card grid-margin">
-    <a href="admin"><div class="card btn-light card-img-holder text-white">
-      <button class="btn btn-send">
-      <div class="card-body">
-        <center><h4 class="font-weight-normal mb-3">Go to Database</h4></center>
-      </div>
-      </button>
-    </div></a>
+  <div class="mb-3">
+      <div id="typingIndicator" class="text-muted">RoBARTa is typing...</div>
+      <label for="summary-type" class="form-label">Select Task:</label>
+      <select id="summary-type" class="form-select">
+          <option value="abstractive">Abstractive Summarisation</option>
+          <option value="sentiment">Sentiment Analysis</option>
+      </select>
   </div>
+
+  <div class="user-input">
+      <textarea class="form-control" id="user-text" rows="3" placeholder="Enter your text here..."></textarea>
+      <button class="btn btn-primary" onclick="processText()">Submit</button>
+  </div>
+
+  <div class="my-3">
+      <label for="file-upload" class="form-label">Or upload a file:</label>
+      <input class="form-control" type="file" id="file-upload" onchange="uploadFile()">
+  </div>
+
+  <button class="btn btn-success mt-2" onclick="exportToPDF()">Export Result as PDF</button>
 </div>
-{%endif%}
+
+<script>
+  const typingIndicator = document.getElementById('typingIndicator');
+  function appendToChat(role, message) {
+      const chatLog = document.getElementById('chat-log');
+      const div = document.createElement('div');
+      div.className = 'chat-bubble';
+      div.innerHTML = `<strong>${role}:</strong> ${message}`;
+      chatLog.appendChild(div);
+      chatLog.scrollTop = chatLog.scrollHeight;
+  }
+
+  let lastResponse = '';
+
+  async function processText() {
+      typingIndicator.style.display = 'block';
+      const text = document.getElementById('user-text').value;
+      const task = document.getElementById('summary-type').value;
+      if (!text) return;
+
+      appendToChat('You', text);
+
+      let endpoint = task === 'sentiment' ? '/sentiment/' : '/summarize/';
+      let payload = task === 'sentiment' ? { text } : { text, summary_type: task };
+
+      const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+      const message = task === 'sentiment' ? `Sentiment: ${data.label} (${(data.score * 100).toFixed(2)}%) | Explanation: ${data.explanation}` : data.summary;
+      lastResponse = message;
+      typingIndicator.style.display = 'none';
+      appendToChat('RoBARTa', message);
+  }
+
+  async function uploadFile() {
+      const fileInput = document.getElementById('file-upload');
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      const response = await fetch('/upload/', {
+          method: 'POST',
+          body: formData
+      });
+
+      const data = await response.json();
+      document.getElementById('user-text').value = data.extracted_text || 'Failed to extract text.';
+  }
+
+  function toggleMode() {
+      document.body.classList.toggle('light-mode');
+      const button = document.getElementById('modeToggle');
+      button.textContent = document.body.classList.contains('light-mode') ? 'Dark Mode' : 'Light Mode';
+  }
+
+  function exportToPDF() {
+      if (!lastResponse) return alert('No output to export.');
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(12);
+      doc.text(lastResponse, 10, 10, { maxWidth: 180 });
+      doc.save('roberta_output.pdf');
+  }
+</script>
 {% endblock body %}

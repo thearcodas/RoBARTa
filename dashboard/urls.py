@@ -1,8 +1,10 @@
-from django.contrib import admin
-from django.urls import path,re_path
-from dashboard import views
-from django.conf import settings
-
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('', views.dashboard,name='dashboard'),]
+    path('', views.index_view, name='index'),
+    path('summarize/', views.summarize_view, name='summarize'),
+    path('sentiment/', views.sentiment_view, name='sentiment'),
+    path('upload/', views.upload_file_view, name='upload'),
+    path('export-pdf/', views.export_pdf_view, name='export_pdf'),
+]

@@ -1,9 +1,9 @@
-body {
+/*body {
   font-size: .875rem;
   background-image: linear-gradient(72deg, #07011d 17%, #29106e 100%);
   color: #627C04;
   font-family: monospace;
-}
+}*/
 
 .bg-theme{
   background-color: #07011D;
@@ -180,77 +180,67 @@ body {
   .bd-mode-toggle {
     z-index: 1500;
   }
-/*chatbot*/
-
-#chatbot{
-  margin-left: auto;
-  margin-right: auto;
-  width: 90%;
-  margin-top: 50px;
-  margin-bottom: 50px;
-  border-radius: 10px;
-  /*border: 1px solid gray;*/
-  padding :5px;
-
+/*Roberta*/
+:root {
+  --bg-color: #343541;
+  --text-color: #ececf1;
+  --bubble-color: #565869;
+  --card-color: #444654;
 }
 
-.botText{
-  font-family: monospace;
-  font-size: 14px;
-  text-align: left;
-  line-height: 25px;
-  color: #ffffff;
+body.light-mode {
+  --bg-color: #ffffff;
+  --text-color: #111;
+  --bubble-color: #f1f1f1;
+  --card-color: #f8f9fa;
 }
 
-.userText{
-  font-family: monospace;
-  font-size: 14px;
-  text-align: right;
-  line-height: 25px;
-  color: #ffffff;
-}
-#userInput{
-  margin-left: auto;
-  margin-right: auto;
-  width: 80%;
-  border-radius: 10px;
-  /*margin-top: 40px;*/
-  text-align: center;
-  bottom: 0;
-  position:fixed;
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#textInput{
-  border: 3px solid white;
-  border-bottom: 3px solid #afafaf;
-  font-family:monospace;
-  font-size: 14px;
-  width: 60%;
-  padding: 16px;
-  color: rgb(213,67,41);
+.chat-window {
+  max-width: 800px;
+  margin: 40px auto;
+  background-color: var(--card-color);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
 }
 
-.btn-send{
-  background-color:#627C04;
-  font-family: monospace;
-  color:white;
+.chat-log {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
 }
 
-/*courses*/
-.btn-light{
-  background-color: #627C04;
+.chat-bubble {
+  background-color: var(--bubble-color);
+  border-radius: 12px;
+  padding: 10px 15px;
+  margin: 10px 0;
 }
 
-/*announcements*/
-
-.bg-accordion{
-  background-color: #29106e !important;
+.user-input {
+  display: flex;
+  gap: 10px;
 }
 
+textarea {
+  resize: none;
+}
 
-
-/*profile*/
-
-.readonly{
-  background-color: #627C04;
+.toggle-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+#typingIndicator {
+  color:rgb(177, 162, 162);
+  font-style: italic;
+  opacity: 0.7;
+  display: none;
 }
