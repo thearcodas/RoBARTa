@@ -1,4 +1,4 @@
-# RoBERTA – AI Text Assistant #
+# RoBARTA – AI Text Assistant #
 RoBERTA is an intelligent web-based application built with Django that performs text summarization and sentiment analysis on various types of textual content, including .pdf, .docx, .txt, and direct user input.
 Using state-of-the-art NLP models like RoBERTa for sentiment classification and BART/T5 for abstractive summarization, this application enables efficient text understanding and intelligent feedback generation.
 
